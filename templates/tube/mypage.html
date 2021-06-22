@@ -1,0 +1,124 @@
+{% extends "tube/mypage_base.html" %}
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+
+<script src="{% static 'tube/js/usericon.js' %}"></script>
+{% endblock %}
+
+{% block mypage_content %}
+
+
+
+    <h2>基本情報</h2>
+
+
+
+    <table>
+        {% if request.user.usericon %}
+        <tr>
+          <td><img class="mypage_usericon" src="/media/{{ request.user.usericon }}"></td>
+        </tr>
+        {% endif %}
+
+        <tr>
+            <td>ユーザー名</td>
+            <td>{{ request.user }}</td>
+        </tr>
+        <tr>
+            <td>最終ログイン</td>
+            <td>{{ request.user.last_login }}</td>
+        </tr>
+        <tr>
+            <td>メールアドレス</td>
+            <td>{{ request.user.email }}</td>
+        </tr>
+    </table>
+
+{% comment %}{# 最初のフォーム #}
+    <form method="POST" action="{% url 'tube:mypage' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>アイコン指定(jpeg,png)：<input type="file" accept=".jpg,.png" name="pre_usericon"></div>
+        <input class="btn-gradient-radius" type="submit" value="送信">
+    </form>
+{% endcomment %}
+
+
+    <form id="icon_upload_form" method="POST" action="{% url 'tube:mypage' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input id="usericon_tab_1" class="usericon_tab_radio" type="radio" name="usericon_tab" value="1" checked><label for="usericon_tab_1" class="usericon_tab_label">ファイルから</label>
+        <input id="usericon_tab_2" class="usericon_tab_radio" type="radio" name="usericon_tab" value="2"><label for="usericon_tab_2" class="usericon_tab_label">ドラッグ&ドロップ</label>
+
+        <div class="usericon_from_file">
+            <div>アイコン指定(jpeg,png)：<input id="icon_upload1" type="file" accept=".jpg,.png"></div>
+        </div>
+
+        <div class="draganddrophandler">ここに画像をドラッグ(.jpeg,.png)</div>
+
+        <div class="icon_canvas">
+            <input id='scal' type='range' value='' min='5' max='400' oninput="scaling(value)" style='width: 300px;'><br>
+            <canvas id='cvs' width='300' height='300'></canvas><br>
+            {# <button id='crop_img' type="button">CROP</button><br> #}
+
+            <input id="icon_upload2" class="btn-gradient-radius" type="button" value="送信">
+        </div>
+    </form>
+
+{% comment %}
+    <form  method="POST" action="{% url 'tube:mypage' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <canvas id='out' width='200' height='200'></canvas>
+        <input  class="btn-gradient-radius" type="button" value="送信">
+    </form>
+{% endcomment %}
+
+    <div id="upload_message" class="upload_message"></div>
+
+
+
+    <h2>投稿した動画</h2>
+
+
+    <div class="video_content_list">
+        {% for video in videos %}
+        <div class="mypage_video_content">
+            <a class="video_content_link" href="{% url 'tube:single' video.id %}">
+                {% if video.thumbnail %}
+                <img class="mypage_thumbnail" src="/media/{{ video.thumbnail }}" alt="{{ video.title }}">
+                {% else %}
+                <img class="mypage_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ video.title }}">
+                {% endif %}
+
+                <div class="video_title">{{ video.title }}</div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="mypage_video_content"><p>投稿した動画はありません。<a href="{% url 'tube:upload' %}">アップロード</a>から投稿できます。</p></div>
+        {% endfor %}
+    </div>
+    
+    <h2>高く評価した動画</h2>
+
+    <div class="video_content_list">
+        {% for video in good_videos %}
+        <div class="mypage_video_content">
+            <a class="video_content_link" href="{% url 'tube:single' video.target.id %}">
+                {% if video.target.thumbnail %}
+                <img class="mypage_thumbnail" src="/media/{{ video.target.thumbnail }}" alt="{{ video.target.title }}">
+                {% else %}
+                <img class="mypage_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ video.target.title }}">
+                {% endif %}
+
+                <div class="video_title">{{ video.target.title }}</div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="video_content"><p>高評価した動画はありません。</div>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}
