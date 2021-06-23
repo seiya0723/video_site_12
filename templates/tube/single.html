@@ -167,7 +167,7 @@
                         <select class="select_form" name="category">
                             <option value="">カテゴリを選択してください</option>
                             {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            <option value="{{ category.id }}" {% if category.id == video.category.id %}selected{% endif %}>{{ category.name }}</option>
                             {% empty %}
                             <option value="">カテゴリがありません。</option>
                             {% endfor %}

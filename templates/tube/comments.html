@@ -1,7 +1,7 @@
 {% load param_change %}
 
 {% for comment in comments %}
-<div>{{ comment.content }}</div>
+<div>{{ comment.content|linebreaksbr }}</div>
 
 <a href="{% url 'tube:index' %}"> {# TODO:indexページではなくて、投稿者の動画ページへ #}
     {% if comment.user.usericon %}

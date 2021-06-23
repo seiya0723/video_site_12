@@ -47,7 +47,6 @@ class IndexView(views.APIView):
             histories   = History.objects.filter(user=request.user.id).order_by("?")[:DEFAULT_VIDEO_AMOUNT]
 
 
-            #TODO:これでフォロー中のユーザーを特定できるのか？←構文上問題はないがユーザー増やして要検証
             follows     = Video.objects.filter(user__followed=request.user.id).order_by("-dt")[:DEFAULT_VIDEO_AMOUNT]
 
             print(follows)

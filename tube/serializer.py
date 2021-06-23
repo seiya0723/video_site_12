@@ -14,7 +14,7 @@ class VideoEditSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Video
-        fields =[ "title","description" ]
+        fields =[ "title","description","category" ]
 
 
 class VideoCommentSerializer(serializers.ModelSerializer):
